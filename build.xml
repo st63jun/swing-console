@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="console" default="compile" basedir=".">
+
+  <property name="src" location="src"/>
+  <property name="src.sample" location="sample"/>
+  <property name="build" location="build"/>
+  <property name="build.sample" location="build-sample"/>
+  <property name="dist" location="dist"/>
+
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init">
+    <javac destdir="${build}" encoding="UTF-8" includeAntRuntime="true">
+      <src path="${src}"/>
+    </javac>
+  </target>
+
+  <target name="sample" depends="compile">
+    <mkdir dir="${build.sample}"/>
+    <javac destdir="${build.sample}" encoding="UTF-8" includeAntRuntime="true" classpath="${build}">
+      <src path="${src.sample}"/>
+    </javac>
+    <java classname="sample.ConsoleSample" fork="true">
+      <classpath>
+	<pathelement location="${build}"/>
+	<pathelement location="${build.sample}"/>
+      </classpath>
+    </java>
+  </target>
+  
+  <target name="jar" depends="compile">
+    <mkdir dir="${dist}"/>
+    <jar jarfile="${dist}/${ant.project.name}-${DSTAMP}.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${build.sample}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+</project>
